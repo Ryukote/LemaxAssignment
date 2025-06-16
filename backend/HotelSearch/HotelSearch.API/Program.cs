@@ -1,10 +1,6 @@
-
-using System.Net;
-using System.Reflection.PortableExecutable;
 using HotelSearch.API.Middleware;
 using HotelSearch.Application;
 using HotelSearch.Infrastructure;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelSearch.API
@@ -17,12 +13,13 @@ namespace HotelSearch.API
 
             builder.Services.AddProblemDetails();
             builder.Services.AddExceptionHandler<KeyNotFoundExceptionHandler>();
-            builder.Services.AddExceptionHandler<ExceptionHandlingMiddleware>();
+            builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.RegisterServices(builder.Configuration);
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<HotelSearchDbContext>(options => options.UseNpgsql(connectionString));
+            //builder.Services.AddDbContext<HotelSearchDbContext>(options => options.UseNpgsql(connectionString), optionsAction => optionsAction.UseNetTopologySuite());
+            builder.Services.AddDbContext<HotelSearchDbContext>(options => options.UseNpgsql(connectionString, o => o.UseNetTopologySuite()));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
