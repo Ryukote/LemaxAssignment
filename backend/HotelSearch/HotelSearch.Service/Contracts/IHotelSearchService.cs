@@ -1,4 +1,5 @@
-﻿using HotelSearch.Service.Contracts;
+﻿using HotelSearch.Application.Payloads.Responses;
+using HotelSearch.Service.Contracts;
 
 namespace HotelSearch.Application.Contracts
 {
@@ -6,6 +7,6 @@ namespace HotelSearch.Application.Contracts
         where TResponse : IResponse
         where TPaginate : IPaginateHotelSearch
     {
-        Task<List<TResponse>> GetSortedHotelsServerSideAsync(TPaginate request);
+        Task<GetPaginatedResponse<TResponse>> GetSortedHotelsServerSideAsync(TPaginate request);
     }
 }

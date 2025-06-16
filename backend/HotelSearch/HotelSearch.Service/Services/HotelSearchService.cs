@@ -21,7 +21,7 @@ namespace HotelSearch.Application.Services
             //_addUpdateValidator = addUpdateValidator;
         }
 
-        public async Task<List<GetHotelDistanceResponse>> GetSortedHotelsServerSideAsync(PaginateHotelRequest request)
+        public async Task<GetPaginatedResponse<GetHotelDistanceResponse>> GetSortedHotelsServerSideAsync(PaginateHotelRequest request)
         {
             try
             {
@@ -44,7 +44,12 @@ namespace HotelSearch.Application.Services
                     .Take(request.PageSize)
                     .ToListAsync();
 
-                return sortedHotels;
+                return new GetPaginatedResponse<GetHotelDistanceResponse>()
+                {
+                    PageNumber = request.PageNumber,
+                    PageSize = request.PageSize,
+                    Result = sortedHotels
+                };
             }
             catch (Exception)
             {

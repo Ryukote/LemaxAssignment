@@ -25,7 +25,7 @@ namespace HotelSearch.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AddUpdateHotelRequest data)
+        public async Task<IActionResult> Create([FromBody] AddUpdateHotelRequest data)
         {
             var id = await _service.AddAsync(data);
 

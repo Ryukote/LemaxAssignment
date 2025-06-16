@@ -15,9 +15,11 @@ namespace HotelSearch.Application.Services
     {
         private readonly HotelSearchDbContext _context;
         private readonly IMapper _mapper;
+        //private readonly IValidator<AddUpdateHotelRequest> _validator;
         private const int WGS84Srid = 4326;
         // Create a static GeometryFactory to be efficient.
         private static readonly GeometryFactory _geometryFactory = new GeometryFactory(new PrecisionModel(), WGS84Srid);
+        
         //private readonly IValidator<AddUpdateHotelRequest> _addUpdateValidator;
 
         //, IValidator<AddUpdateHotelRequest> addUpdateValidator
@@ -25,6 +27,7 @@ namespace HotelSearch.Application.Services
         {
             _context = context;
             _mapper = mapper;
+            //_validator = validator;
             //_addUpdateValidator = addUpdateValidator;
         }
 
@@ -32,8 +35,6 @@ namespace HotelSearch.Application.Services
         {
             try
             {
-                //await _addUpdateValidator.ValidateAndThrowAsync(data);
-
                 var entity = _mapper.Map<Hotel>(data);
 
                 _context.Hotel.Add(entity);
@@ -70,7 +71,7 @@ namespace HotelSearch.Application.Services
             }
         }
 
-        public async Task<List<GetHotelResponse>> GetPaginatedAsync(PaginateRequest request)
+        public async Task<GetPaginatedResponse<GetHotelResponse>> GetPaginatedAsync(PaginateRequest request)
         {
             try
             {
@@ -80,9 +81,14 @@ namespace HotelSearch.Application.Services
                     .Take(request.PageSize)
                     .ToListAsync();
 
-                return hotels;
+                return new GetPaginatedResponse<GetHotelResponse>()
+                {
+                    PageNumber = request.PageNumber,
+                    PageSize = request.PageSize,
+                    Result = hotels
+                };
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }

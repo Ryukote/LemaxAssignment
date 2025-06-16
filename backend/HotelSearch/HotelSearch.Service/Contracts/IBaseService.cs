@@ -1,4 +1,5 @@
 ﻿using HotelSearch.Application.Payloads.Requests;
+using HotelSearch.Application.Payloads.Responses;
 using HotelSearch.Service.Contracts;
 
 namespace HotelSearch.Application.Contracts
@@ -9,7 +10,7 @@ namespace HotelSearch.Application.Contracts
         where TPaginated : IPaginated
     {
         Task<TResponse> GetByIdAsync(Guid id);
-        Task<List<TResponse>> GetPaginatedAsync(PaginateRequest request);
+        Task<GetPaginatedResponse<TResponse>> GetPaginatedAsync(PaginateRequest request);
         Task<Guid> AddAsync(TRequest data);
         Task UpdateAsync(Guid id, TRequest data);
         Task SoftDeleteAsync(Guid id);

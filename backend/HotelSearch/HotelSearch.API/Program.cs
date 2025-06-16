@@ -1,6 +1,10 @@
+using System.Reflection;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using HotelSearch.API.Middleware;
 using HotelSearch.Application;
 using HotelSearch.Infrastructure;
+using HotelSearch.Service.Payloads.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelSearch.API
@@ -22,12 +26,14 @@ namespace HotelSearch.API
             builder.Services.AddDbContext<HotelSearchDbContext>(options => options.UseNpgsql(connectionString, o => o.UseNetTopologySuite()));
 
             builder.Services.AddControllers();
+            builder.Services.AddFluentValidationAutoValidation();
+
+            // 2. This scans the current assembly and registers all validators
+            //    (like our CreateHotelRequestValidator) with the DI container.
+            builder.Services.AddValidatorsFromAssemblyContaining<AddUpdateHotelRequest>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            //
-
 
             var app = builder.Build();
 
