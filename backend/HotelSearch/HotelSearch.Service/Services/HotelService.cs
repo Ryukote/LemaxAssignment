@@ -6,8 +6,10 @@ using HotelSearch.Application.Payloads.Responses;
 using HotelSearch.Infrastructure;
 using HotelSearch.Model;
 using HotelSearch.Service.Payloads.Requests;
+using HotelSearch.Utility;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+
 
 namespace HotelSearch.Application.Services
 {
@@ -16,9 +18,7 @@ namespace HotelSearch.Application.Services
         private readonly HotelSearchDbContext _context;
         private readonly IMapper _mapper;
         //private readonly IValidator<AddUpdateHotelRequest> _validator;
-        private const int WGS84Srid = 4326;
-        // Create a static GeometryFactory to be efficient.
-        private static readonly GeometryFactory _geometryFactory = new GeometryFactory(new PrecisionModel(), WGS84Srid);
+        
         
         //private readonly IValidator<AddUpdateHotelRequest> _addUpdateValidator;
 
@@ -131,7 +131,7 @@ namespace HotelSearch.Application.Services
                     throw new KeyNotFoundException();
                 }
 
-                result.Location = CreatePointFromLatLon(Convert.ToDouble(data.Latitude), Convert.ToDouble(data.Longitude));
+                result.Location = PostGISUtility.CreatePointFromLatLon(Convert.ToDouble(data.Latitude), Convert.ToDouble(data.Longitude));
 
                 result.Price = data.Price;
                 result.Name = data.Name;
@@ -142,12 +142,6 @@ namespace HotelSearch.Application.Services
             {
                 throw;
             }
-        }
-
-        private static Point CreatePointFromLatLon(double latitude, double longitude)
-        {
-            // IMPORTANT: The order is Longitude, then Latitude!
-            return _geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
         }
     }
 }

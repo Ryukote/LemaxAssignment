@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelSearch.Infrastructure\HotelSearch.Infrastructure.csproj" />
+    <ProjectReference Include="..\HotelSearch.Utility\HotelSearch.Utility.csproj" />
   </ItemGroup>
 
 </Project>

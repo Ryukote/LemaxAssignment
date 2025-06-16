@@ -12,21 +12,17 @@ namespace HotelSearch.Application.Services
     {
         private readonly HotelSearchDbContext _context;
         private readonly IMapper _mapper;
-        private const int WGS84Srid = 4326;
-        private static readonly GeometryFactory _geometryFactory = new GeometryFactory(new PrecisionModel(), WGS84Srid);
+        
         public HotelSearchService(HotelSearchDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            //_addUpdateValidator = addUpdateValidator;
         }
 
         public async Task<GetPaginatedResponse<GetHotelDistanceResponse>> GetSortedHotelsServerSideAsync(PaginateHotelRequest request)
         {
             try
             {
-                // Create a Point object representing the user's location.
-                // SRID 4326 is the standard for GPS coordinates.
                 var userLocation = new Point(request.UserLongitude, request.UserLatitude) { SRID = 4326 };
 
                 // 1. Let the DATABASE do the work.
@@ -55,12 +51,6 @@ namespace HotelSearch.Application.Services
             {
                 throw;
             }
-        }
-
-        private static Point CreatePointFromLatLon(double latitude, double longitude)
-        {
-            // IMPORTANT: The order is Longitude, then Latitude!
-            return _geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
         }
     }
 }

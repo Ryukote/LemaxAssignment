@@ -6,7 +6,7 @@ namespace HotelSearch.Test.Validators
 {
     public class PaginateHotelRequestValidatorTests
     {
-        private readonly PaginateHotelRequestValidator _validator = new();
+        private readonly PaginateHotelSearchRequestValidator _validator = new();
 
         [Fact]
         public void Should_Have_Error_When_PageNumber_Is_Less_Than_1()

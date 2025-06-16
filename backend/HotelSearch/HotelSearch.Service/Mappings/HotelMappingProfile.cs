@@ -2,6 +2,7 @@
 using HotelSearch.Application.Payloads.Responses;
 using HotelSearch.Model;
 using HotelSearch.Service.Payloads.Requests;
+using HotelSearch.Utility;
 using NetTopologySuite.Geometries;
 
 namespace HotelSearch.Application.Mappings
@@ -30,14 +31,8 @@ namespace HotelSearch.Application.Mappings
             CreateMap<AddUpdateHotelRequest, Hotel>()
                 .ForMember(
                     dest => dest.Location,
-                    opt => opt.MapFrom(src => CreatePointFromLatLon(Convert.ToDouble(src.Latitude), Convert.ToDouble(src.Longitude)))
+                    opt => opt.MapFrom(src => PostGISUtility.CreatePointFromLatLon(Convert.ToDouble(src.Latitude), Convert.ToDouble(src.Longitude)))
                 );
-        }
-
-        private static Point CreatePointFromLatLon(double latitude, double longitude)
-        {
-            // IMPORTANT: The order is Longitude, then Latitude!
-            return _geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
         }
     }
 }
