@@ -1,4 +1,5 @@
 ﻿using HotelSearch.Application.Contracts;
+using HotelSearch.Application.Payloads.Requests;
 using HotelSearch.Application.Payloads.Responses;
 using HotelSearch.Service.Payloads.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +10,8 @@ namespace HotelSearch.API.Controllers
     [ApiController]
     public class HotelController : ControllerBase
     {
-        private IBaseService<AddUpdateHotelRequest, GetHotelResponse> _service;
-        public HotelController(IBaseService<AddUpdateHotelRequest, GetHotelResponse> service)
+        private IBaseService<AddUpdateHotelRequest, GetHotelResponse, PaginateRequest> _service;
+        public HotelController(IBaseService<AddUpdateHotelRequest, GetHotelResponse, PaginateRequest> service)
         {
             _service = service;
         }
@@ -29,6 +30,14 @@ namespace HotelSearch.API.Controllers
             var id = await _service.AddAsync(data);
 
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
+        }
+
+        [HttpPost("paginated")]
+        public async Task<IActionResult> GetPaginated(PaginateRequest request)
+        {
+            var result = await _service.GetPaginatedAsync(request);
+
+            return Ok(result);
         }
 
         [HttpPut("{id}")]

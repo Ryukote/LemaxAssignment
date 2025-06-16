@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using HotelSearch.Application.Contracts;
+using HotelSearch.Application.Payloads.Requests;
 using HotelSearch.Application.Payloads.Responses;
 using HotelSearch.Application.Services;
 using HotelSearch.Service.Payloads.Requests;
@@ -16,9 +17,10 @@ namespace HotelSearch.Application
             var serviceAssembly = typeof(AddUpdateHotelRequest).Assembly;
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(serviceAssembly);
-            
-            services.AddTransient<IBaseService<AddUpdateHotelRequest, GetHotelResponse>, HotelService>();
-            
+
+            services.AddTransient<IBaseService<AddUpdateHotelRequest, GetHotelResponse, PaginateRequest>, HotelService>();
+            services.AddTransient<IHotelSearchService<GetHotelDistanceResponse, PaginateHotelRequest>, HotelSearchService>();
+
             return services;
         }
     }

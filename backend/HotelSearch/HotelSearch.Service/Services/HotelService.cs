@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using HotelSearch.Application.Contracts;
+using HotelSearch.Application.Payloads.Requests;
 using HotelSearch.Application.Payloads.Responses;
 using HotelSearch.Infrastructure;
 using HotelSearch.Model;
@@ -10,7 +11,7 @@ using NetTopologySuite.Geometries;
 
 namespace HotelSearch.Application.Services
 {
-    public class HotelService : IBaseService<AddUpdateHotelRequest, GetHotelResponse>
+    public class HotelService : IBaseService<AddUpdateHotelRequest, GetHotelResponse, PaginateRequest>
     {
         private readonly HotelSearchDbContext _context;
         private readonly IMapper _mapper;
@@ -41,7 +42,7 @@ namespace HotelSearch.Application.Services
 
                 return entity.Id;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -63,7 +64,25 @@ namespace HotelSearch.Application.Services
 
                 return _mapper.Map<GetHotelResponse>(result);
             }
-            catch (Exception ex)
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<GetHotelResponse>> GetPaginatedAsync(PaginateRequest request)
+        {
+            try
+            {
+                var hotels = await _context.Hotel
+                    .Select(hotel => _mapper.Map<GetHotelResponse>(hotel))
+                    .Skip((request.PageNumber - 1) * request.PageSize)
+                    .Take(request.PageSize)
+                    .ToListAsync();
+
+                return hotels;
+            }
+            catch(Exception)
             {
                 throw;
             }
@@ -87,7 +106,7 @@ namespace HotelSearch.Application.Services
 
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -113,7 +132,7 @@ namespace HotelSearch.Application.Services
 
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
