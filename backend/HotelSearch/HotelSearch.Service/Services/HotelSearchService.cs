@@ -40,11 +40,15 @@ namespace HotelSearch.Application.Services
                     .Take(request.PageSize)
                     .ToListAsync();
 
+                var total = await _context.Hotel
+                    .CountAsync();
+
                 return new GetPaginatedResponse<GetHotelDistanceResponse>()
                 {
                     PageNumber = request.PageNumber,
                     PageSize = request.PageSize,
-                    Result = sortedHotels
+                    Result = sortedHotels,
+                    Total = total
                 };
             }
             catch (Exception)

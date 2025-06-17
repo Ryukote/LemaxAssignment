@@ -81,11 +81,14 @@ namespace HotelSearch.Application.Services
                     .Take(request.PageSize)
                     .ToListAsync();
 
+                var total = hotels.Count();
+
                 return new GetPaginatedResponse<GetHotelResponse>()
                 {
                     PageNumber = request.PageNumber,
                     PageSize = request.PageSize,
-                    Result = hotels
+                    Result = hotels,
+                    Total = total
                 };
             }
             catch (Exception)
